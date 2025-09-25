@@ -31,7 +31,7 @@ Others of concern: The total number of individuals who are not included in the m
 
 
 Freedom in the World Index Data Dictionary
-This data is from the Freedom in the World reports. Scores are typically on a scale of 0 to 4, with 0 being the worst and 4 being the best, unless otherwise noted.
+This data is from the Freedom in the World report. Scores are typically on a scale of 0 to 4, with 0 being the worst and 4 being the best, unless otherwise noted.
 
 Country/Territory: The name of the country or territory.
 
