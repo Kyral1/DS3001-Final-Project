@@ -1,0 +1,86 @@
+Data Dictionary
+
+Refugee Data Dictionary
+
+Year: The year of the data record.
+
+Country of Asylum: The name of the country where a person is seeking or has received protection.
+
+Country of Origin: The name of the country from which a person has been displaced.
+
+Country of Asylum ISO: The ISO 3166-1 alpha-3 code for the country of asylum.
+
+Country of Origin ISO: The ISO 3166-1 alpha-3 code for the country of origin.
+
+Refugees: The total number of refugees.
+
+Asylum-seekers: The total number of asylum-seekers.
+
+IDPs: The total number of Internally Displaced Persons.
+
+Other people in need of international protection: The total number of people in need of international protection who do not fall into the other categories.
+
+Stateless persons: The total number of stateless persons.
+
+Host community: The total number of individuals in the host community.
+
+Others of concern: The total number of individuals who are not included in the main categories but are of concern to humanitarian organizations.
+
+
+
+
+
+Freedom in the World Index Data Dictionary
+This data is from the Freedom in the World reports. Scores are typically on a scale of 0 to 4, with 0 being the worst and 4 being the best, unless otherwise noted.
+
+Country/Territory: The name of the country or territory.
+
+Region: The geographic region of the country or territory.
+
+C/T: Indicates if the entry is a country (c) or territory (t).
+
+Edition: The year of the report.
+
+Status: The overall freedom status: F (Free), PF (Partly Free), or NF (Not Free).
+
+PR rating: The Political Rights Rating, on a scale of 1 (least free) to 7 (most free).
+
+CL rating: The Civil Liberties Rating, on a scale of 1 (least free) to 7 (most free).
+
+PR: The aggregate score for the Political Rights category, based on sub-scores from A, B, and C.
+
+A1 to A3: Sub-scores for the A. Electoral Process subcategory.
+
+A: The aggregate score for the A. Electoral Process subcategory.
+
+B1 to B4: Sub-scores for the B. Political Pluralism and Participation subcategory.
+
+B: The aggregate score for the B. Political Pluralism and Participation subcategory.
+
+C1 to C3: Sub-scores for the C. Functioning of Government subcategory.
+
+C: The aggregate score for the C. Functioning of Government subcategory.
+
+CL: The aggregate score for the Civil Liberties category, based on sub-scores from D, E, F, and G.
+
+D1 to D4: Sub-scores for the D. Freedom of Expression and Belief subcategory.
+
+D: The aggregate score for the D. Freedom of Expression and Belief subcategory.
+
+E1 to E3: Sub-scores for the E. Associational and Organizational Rights subcategory.
+
+E: The aggregate score for the E. Associational and Organizational Rights subcategory.
+
+F1 to F4: Sub-scores for the F. Rule of Law subcategory.
+
+F: The aggregate score for the F. Rule of Law subcategory.
+
+G1 to G4: Sub-scores for the G. Personal Autonomy and Individual Rights subcategory.
+
+G: The aggregate score for the G. Personal Autonomy and Individual Rights subcategory.
+
+Add Q: The score for Additional Discretionary Question Q. (Formerly Add B)
+
+Add A: The score for Additional Discretionary Question A.
+
+Total: The aggregate score for all categories.
