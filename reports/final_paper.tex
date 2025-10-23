@@ -134,17 +134,11 @@ The data cleaning process for the refugee and freedom index data involved severa
 This table provides a data dictionary for the Freedom in the World (FIW) dataset, defining the various columns and their meanings.
 
 \begin{table}[H]
-
 \caption{Data Dictionary}
-
 \label{tab:data_dict}
-
 \vskip 0.15in
-
 \begin{center}
-
 \begin{small}
-
 \renewcommand{\arraystretch}{1.3} % more row spacing
 \setlength{\tabcolsep}{6pt} % column padding
 
@@ -268,13 +262,9 @@ Total & The aggregate score for all categories. \\
 \hline
 
 \end{tabular}
-
 \end{small}
-
 \end{center}
-
 \vskip -0.1in
-
 \end{table}
 
 
@@ -285,18 +275,18 @@ Total & The aggregate score for all categories. \\
 The primary objective of our project is to create a predictive model that quantifies the relationship between political and civil liberties (push and pull factors) with refugee migration flows. We are framing our task as a \textbf{regression problem}, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model training, and model validation and assessment. Due to the inherent non-linear and potentially discontinuous nature of political conditions and their impact on human migration, we will employ a non-parametric approach. This means that we will use the aggregated total freedom scores of the origin and asylum countries as the key independent variables (features) to predict the total number of refugees between them.
 
 \subsubsection*{Feature Engineering and Data Integration}
-To align the two datasets---the time-series refugee counts from UNHCR and the annual freedom index scores from Freedom House---we performed a key data integration step. For every unique country-year observation in the UNHCR data (defined by $\text{Year}$, $\text{Country of Origin ISO}$, and $\text{Country of Asylum ISO}$), we joined the corresponding freedom scores from the Freedom House data. This join was executed twice:
+To align the two datasets, the time-series refugee counts from UNHCR and the annual freedom index scores from Freedom House, we performed a key data integration step. For every unique country-year observation in the UNHCR data (defined by $\text{Year}$, $\text{Country of Origin ISO}$, and $\text{Country of Asylum ISO}$), we joined the corresponding freedom scores from the Freedom House data. This join was executed twice:
 \begin{enumerate}
     \item To associate the \textbf{Origin Country}'s $\text{Total}$ freedom score ($F_{\text{Origin}}$) based on the $\text{Year}$ and $\text{Country of Origin}$. The Origin Country's score is hypothesized to act as a \textbf{push factor} (low score predicts high migration).
     \item To associate the \textbf{Asylum Country}'s $\text{Total}$ freedom score ($F_{\text{Asylum}}$) based on $\text{Year}$ and $\text{Country of Asylum}$. The Asylum Country's score is hypothesized to act as a \textbf{pull factor} (high score predicts high immigration).
 \end{enumerate}
-The target variable for this model, $\text{Refugees}$, is a count and is, as expected, highly skewed, with many zero or near-zero values. To create a more normal and stable variance for the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The addition of $1$ ensures that zero refugee counts can be handled without resulting in undefined logarithms. The final engineered dataset consists of the features $(F_{\text{Origin}}, F_{\text{Asylum}})$ and the target variable $Y$.
+The target variable for this model, $\textbf{Refugees}$, is a count, and as expected, highly skewed, with many zero or near-zero values. To create a more normal and stable variance for the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The addition of $1$ ensures that zero refugee counts can be handled without resulting in undefined logarithms. The final engineered dataset consists of the features $(F_{\text{Origin}}, F_{\text{Asylum}})$ and the target variable $Y$. The merged dataset includes approximately 99,946 unique country–pair–year observations spanning 2013–2021.
 
 \subsection{Model Justification}
-We selected a \textbf{Random Forest Regressor (RFR)} as our predictive model. [Image of a Decision Tree structure]. This choice is justified by a few advantages over traditional linear models, especially for our data:
+We selected a \textbf{Random Forest Regressor (RFR)} as our predictive model. [Insert Image of our Decision Tree Structure] This choice is justified by a few advantages over traditional linear models, especially for our data:
 \begin{enumerate}
-    \item \textbf{Non-linearity and Interactions:} The relationship between political freedom and migration is complex; it is unlikely to be a simple linear function. The RFR, being based on decision trees, can inherently capture non-linear relationships and intricate interaction effects between the origin and asylum country scores without requiring manual feature engineering.
-    \item \textbf{Robustness to Data Characteristics:} RFR is robust against outliers and requires minimal data preprocessing, specifically avoiding the need for feature scaling, which is beneficial when combining features with different inherent scales (like the aggregated freedom scores that come from very different countries/circumstances).
+    \item \textbf{Non-linearity and Interactions:} The relationship between political freedom and migration is complex; therefore, it is unlikely to be a simple linear function. The RFR, being based on decision trees, can inherently capture non-linear relationships and intricate interaction effects between the origin and asylum country scores without requiring manual feature engineering.
+    \item \textbf{Robustness to Data Characteristics:} RFR is robust against outliers and requires minimal data preprocessing. Specifically the process avoids the need for feature scaling, which is beneficial when combining features with different inherent scales, such as the aggregated freedom scores that come from very different countries/circumstances.
     \item \textbf{Feature Importance:} The RFR also provides a quantitative measure of \textbf{feature importance}, allowing us to determine whether the push factors ($F_{\text{Origin}}$) or the pull factors ($F_{\text{Asylum}}$) have a greater predictive influence on the migration rate.
 \end{enumerate}
 
@@ -317,7 +307,7 @@ During cross-validation, the model's performance was evaluated using the negativ
 
 
 \subsection{Model Validation Plan}
-The trained Random Forest Regressor will be evaluated on the held-out test set using both statistical and domain-specific metrics.
+The trained Random Forest Regressor will be evaluated on the withheld test set using both statistical and domain-specific metrics.
 
 \subsubsection*{Statistical Metrics (Log Scale)}
 The primary statistical metrics calculated on the log-transformed target variable ($Y$) and its prediction ($\hat{Y}$) are $\mathbf{R^2}$ and \textbf{Root Mean Squared Error (RMSE)}.
