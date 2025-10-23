@@ -282,56 +282,48 @@ Total & The aggregate score for all categories. \\
 \label{methods}
 
 \subsection{Method Overview}
-Our primary objective in our project is to create a predictive model that quantifies the relationship between political and civil liberties (push and pull factors) with refugee migration flows. We are framing our task as a \textbf{regression problem}, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model selection and training, and robust model validation. Due to the inherent non-linear and potentially discontinuous nature of political conditions and their impact on human migration, we will employ a non-parametric approach. This means that we will use the aggregated total freedom scores of the origin and asylum countries as the key independent variables (features) to predict the total number of refugees between them.
+The primary objective of our project is to create a predictive model that quantifies the relationship between political and civil liberties (push and pull factors) with refugee migration flows. We are framing our task as a \textbf{regression problem}, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model training, and model validation and assessment. Due to the inherent non-linear and potentially discontinuous nature of political conditions and their impact on human migration, we will employ a non-parametric approach. This means that we will use the aggregated total freedom scores of the origin and asylum countries as the key independent variables (features) to predict the total number of refugees between them.
 
 \subsubsection*{Feature Engineering and Data Integration}
 To align the two datasets---the time-series refugee counts from UNHCR and the annual freedom index scores from Freedom House---we performed a key data integration step. For every unique country-year observation in the UNHCR data (defined by $\text{Year}$, $\text{Country of Origin ISO}$, and $\text{Country of Asylum ISO}$), we joined the corresponding freedom scores from the Freedom House data. This join was executed twice:
 \begin{enumerate}
     \item To associate the \textbf{Origin Country}'s $\text{Total}$ freedom score ($F_{\text{Origin}}$) based on the $\text{Year}$ and $\text{Country of Origin}$. The Origin Country's score is hypothesized to act as a \textbf{push factor} (low score predicts high migration).
-    \item To associate the \textbf{Asylum Country}'s $\text{Total}$ freedom score ($F_{\text{Asylum}}$) based on the $\text{Year}$ and $\text{Country of Asylum}$. The Asylum Country's score is hypothesized to act as a \textbf{pull factor} (high score predicts high migration).
+    \item To associate the \textbf{Asylum Country}'s $\text{Total}$ freedom score ($F_{\text{Asylum}}$) based on $\text{Year}$ and $\text{Country of Asylum}$. The Asylum Country's score is hypothesized to act as a \textbf{pull factor} (high score predicts high immigration).
 \end{enumerate}
-The target variable, $\text{Refugees}$, is a count and is highly skewed, with many zero or very small values. To normalize this distribution and stabilize the variance for the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The addition of $1$ ensures that zero refugee counts can be handled without resulting in undefined logarithms. The final engineered dataset consists of the features $(F_{\text{Origin}}, F_{\text{Asylum}})$ and the target variable $Y$.
+The target variable for this model, $\text{Refugees}$, is a count and is, as expected, highly skewed, with many zero or near-zero values. To create a more normal and stable variance for the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The addition of $1$ ensures that zero refugee counts can be handled without resulting in undefined logarithms. The final engineered dataset consists of the features $(F_{\text{Origin}}, F_{\text{Asylum}})$ and the target variable $Y$.
 
 \subsection{Model Justification}
-We selected the \textbf{Random Forest Regressor (RFR)} as our primary predictive model. [Image of a Decision Tree structure]. This choice is justified by several advantages over traditional linear models:
+We selected a \textbf{Random Forest Regressor (RFR)} as our predictive model. [Image of a Decision Tree structure]. This choice is justified by a few advantages over traditional linear models, especially for our data:
 \begin{enumerate}
-    \item \textbf{Non-linearity and Interactions:} The relationship between political freedom and migration is complex; it is unlikely to be a simple linear function. The RFR, an ensemble learning method based on decision trees, can inherently capture non-linear relationships and intricate interaction effects between the origin and asylum country scores without requiring manual feature engineering.
-    \item \textbf{Robustness to Data Characteristics:} RFR is robust against outliers and requires minimal data preprocessing, specifically avoiding the need for feature scaling, which is beneficial when combining features with different inherent scales (like the aggregated freedom scores).
-    \item \textbf{Feature Importance:} As an added benefit, the RFR provides a quantitative measure of \textbf{feature importance}, allowing us to determine whether the push factors ($F_{\text{Origin}}$) or the pull factors ($F_{\text{Asylum}}$) have a greater predictive influence on the migration rate.
+    \item \textbf{Non-linearity and Interactions:} The relationship between political freedom and migration is complex; it is unlikely to be a simple linear function. The RFR, being based on decision trees, can inherently capture non-linear relationships and intricate interaction effects between the origin and asylum country scores without requiring manual feature engineering.
+    \item \textbf{Robustness to Data Characteristics:} RFR is robust against outliers and requires minimal data preprocessing, specifically avoiding the need for feature scaling, which is beneficial when combining features with different inherent scales (like the aggregated freedom scores that come from very different countries/circumstances).
+    \item \textbf{Feature Importance:} The RFR also provides a quantitative measure of \textbf{feature importance}, allowing us to determine whether the push factors ($F_{\text{Origin}}$) or the pull factors ($F_{\text{Asylum}}$) have a greater predictive influence on the migration rate.
 \end{enumerate}
 
 
 \subsection{Model Training Procedure}
 \subsubsection*{Data Splitting}
-The engineered dataset was randomly partitioned into training and testing sets using an 80/20 split. The training set (80\% of the data) was used to train the Random Forest model, and the held-out test set (20\%) was reserved exclusively for final, unbiased evaluation of the model's performance on unseen data. While a temporal split is possible for time-series data, a random split was chosen to maximize the diversity of country-year observations in both the training and testing phases.
+The engineered dataset was randomly partitioned into training and testing sets using an 80/20 split. The training set (80\%) was used to train the RFR model, and the held-out test set (20\%) was reserved exclusively for final evaluation of the model's performance on unseen data. While a temporal split is possible for time-series data, a random split was chosen to maximize the diversity of country-year observations in both the training and testing phases. Since some of the countries had conflicts at different years, a temporal split may also have yielded results that were ignorant of the conflict periods.
 
 
 \subsubsection*{Hyperparameter Optimization}
-To prevent overfitting and optimize the model’s generalization ability, we performed \textbf{cross-validated hyperparameter tuning}. We employed a 5-fold cross-validation scheme coupled with a Randomized Search to efficiently explore the hyperparameter space. Key hyperparameters targeted for optimization included:
+To prevent overfitting and optimize the model’s generalization, we performed \textbf{cross-validated hyperparameter tuning}. We used a 5-fold cross-validation and a Randomized Search to efficiently explore the hyperparameters. Key hyperparameters targeted for optimization included:
 \begin{itemize}
-    \item $\mathbf{n\_\text{estimators}}$: The number of decision trees in the forest.
-    \item $\mathbf{max\_\text{depth}}$: The maximum depth of each individual decision tree.
-    \item $\mathbf{min\_\text{samples\_split}}$: The minimum number of samples required to split an internal node.
+    \item \textbf{$\mathbf{n\_{estimators}}$}: The number of decision trees in the forest.
+    \item $\mathbf{max\_{depth}}$: The maximum depth of each individual decision tree.
+    \item $\mathbf{min\_{samples\_split}}$: The minimum number of samples required to split an internal node.
 \end{itemize}
-The model's performance during cross-validation was evaluated using the negative Mean Squared Error (MSE) on the log-transformed target, with the goal of selecting the parameter combination that minimizes this error.
+During cross-validation, the model's performance was evaluated using the negative Mean Squared Error (MSE) on the log-transformed target, with the goal of selecting the parameter combination that minimizes MSE.
 
 
 \subsection{Model Validation Plan}
-The trained and tuned Random Forest Regressor will be evaluated on the held-out test set using both statistical and domain-specific metrics.
+The trained Random Forest Regressor will be evaluated on the held-out test set using both statistical and domain-specific metrics.
 
 \subsubsection*{Statistical Metrics (Log Scale)}
-The primary statistical metrics calculated on the log-transformed target variable ($Y$) and its prediction ($\hat{Y}$) are:
-\begin{enumerate}
-    \item $\mathbf{R^2}$ \textbf{(Coefficient of Determination)}: Measures the proportion of the variance in the dependent variable that is predictable from the independent variables. A value closer to $1.0$ indicates a better fit.
-    \item \textbf{Root Mean Squared Error (RMSE)}: Provides a measure of the average magnitude of the error in the $\log(1 + \text{Refugees})$ space.
-\end{enumerate}
+The primary statistical metrics calculated on the log-transformed target variable ($Y$) and its prediction ($\hat{Y}$) are $\mathbf{R^2}$ and \textbf{Root Mean Squared Error (RMSE)}.
 
 \subsubsection*{Domain-Specific Metrics (Original Scale)}
-To ensure the model's predictions are interpretable in the context of real-world refugee counts, the predictions $\hat{Y}$ will be inverse-transformed back to the original scale using the formula: $$\text{Predicted Refugees} = \exp(\hat{Y}) - 1$$ The model's final performance will be assessed using:
-\begin{enumerate}
-    \item \textbf{Mean Absolute Error (MAE)}: Calculates the average absolute difference between the true number of refugees and the predicted number. This metric is easily interpretable, providing the typical error in the units of refugees.
-    \item \textbf{Mean Absolute Percentage Error (MAPE)}: Measures the accuracy as a percentage of the error relative to the true values. This is particularly useful for assessing predictive power across different scales of migration flows.
-\end{enumerate}
+To ensure the model's predictions are interpretable in the context of real-world refugee counts, the predictions $\hat{Y}$ will be inverse-transformed back to the original scale using the formula: $$\text{Predicted Refugees} = \exp(\hat{Y}) - 1$$ The model's final performance will be assessed using Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE).
 
 
 \section{Conclusion}
