@@ -130,6 +130,7 @@ These datasets do consist limitations, such that refugee statistics often underr
 \subsection{Data Cleaning}
 The data cleaning process for the refugee and freedom index data involved several steps to ensure the data was ready for analysis. For the persons-of-concern.csv file, which contains the data regarding refugee migration, the initial loading and inspection revealed no immediate issues with missing values or data types, so no further cleaning was required. For the All-data-FIW-2013-2021.xlsx file, which contains the data regarding freedom indexes, initial attempts to load the data resulted in incorrect headers due to metadata at the beginning of the sheet. This was corrected by specifying the correct sheet name ('FIW13-21') and header row (row 0) during loading. The columns were then renamed for clarity, specifically 'C/T?' to 'Country Type', 'Country/Territory' to 'Country', and 'Total' to 'Freedom Total Score'. Finally, the first row, which contained descriptive information rather than data. We removed this so data handling could be smoother. Then relevant columns were selected and converted to appropriate numeric types. Finally we checked for null values and confirmed that there were no missing values in the selected columns after these steps.
 
+
 \subsection{Data Dictionary}
 \begin{table}[H]
 \caption{Data Dictionary}
@@ -213,7 +214,6 @@ Total & Overall FIW score. & \textbf{Very strong predictor of Status (almost det
 \end{center}
 \vskip -0.1in
 \end{table}
-
 
 
 
