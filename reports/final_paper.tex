@@ -131,141 +131,92 @@ These datasets do consist limitations, such that refugee statistics often underr
 The data cleaning process for the refugee and freedom index data involved several steps to ensure the data was ready for analysis. For the persons-of-concern.csv file, which contains the data regarding refugee migration, the initial loading and inspection revealed no immediate issues with missing values or data types, so no further cleaning was required. For the All-data-FIW-2013-2021.xlsx file, which contains the data regarding freedom indexes, initial attempts to load the data resulted in incorrect headers due to metadata at the beginning of the sheet. This was corrected by specifying the correct sheet name ('FIW13-21') and header row (row 0) during loading. The columns were then renamed for clarity, specifically 'C/T?' to 'Country Type', 'Country/Territory' to 'Country', and 'Total' to 'Freedom Total Score'. Finally, the first row, which contained descriptive information rather than data. We removed this so data handling could be smoother. Then relevant columns were selected and converted to appropriate numeric types. Finally we checked for null values and confirmed that there were no missing values in the selected columns after these steps.
 
 \subsection{Data Dictionary}
-This table provides a data dictionary for the Freedom in the World (FIW) dataset, defining the various columns and their meanings.
-
 \begin{table}[H]
 \caption{Data Dictionary}
 \label{tab:data_dict}
-\vskip 0.15in
+\vskip 0.1in
 \begin{center}
-\begin{small}
-\renewcommand{\arraystretch}{1.3} % more row spacing
-\setlength{\tabcolsep}{6pt} % column padding
+\begin{scriptsize}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
 
-\begin{tabular}{|p{0.22\columnwidth}|p{0.68\columnwidth}|}
+\begin{tabular}{|p{0.19\columnwidth}|p{0.53\columnwidth}|p{0.20\columnwidth}|}
 \hline
-\textbf{Column Name} & \textbf{Description} \\
-\hline
-
-Year & The year of the data record. \\
+\textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
 
-Country of Asylum & The name of the country where a person is seeking or has received protection. \\
+Year & Year of observation. & Useful for trends/time-series effects. \\
 \hline
 
-Country of Origin & The name of the country from which a person has been displaced. \\
+Country of Asylum / Origin & Countries involved in displacement flows. & Useful for geographic controls. \\
 \hline
 
-Country of Asylum ISO & The ISO 3166-1 alpha-3 code for the country of asylum. \\
+ISO Codes & ISO 3166-1 alpha-3 identifiers. & Needed for merging datasets. \\
 \hline
 
-Country of Origin ISO & The ISO 3166-1 alpha-3 code for the country of origin. \\
+Refugees, Asylum-seekers, IDPs, Stateless, Others of concern & Population counts of displacement categories. & \textbf{Key}: High displacement often correlates with lower freedom scores and instability. \\
 \hline
 
-Refugees & The total number of refugees. \\
+Host community & Host population size. & Contextual, low predictive weight. \\
 \hline
 
-Asylum-seekers & The total number of asylum-seekers. \\
+Region & Geographic region. & \textbf{Moderate}: Captures regional patterns in governance. \\
 \hline
 
-IDPs & The total number of Internally Displaced Persons. \\
+C/T & Country vs. territory indicator. & Minor structural variable. \\
 \hline
 
-Other people in need of international protection & The total number of people in need of international protection who do not fall into the other categories. \\
+Edition & Report edition year. & Mirrors “Year”; low predictive weight. \\
 \hline
 
-Stateless persons & The total number of stateless persons. \\
+Status (F/PF/NF) & Freedom classification. & \textbf{Target variable (if predicting freedom status).} \\
 \hline
 
-Host community & The total number of individuals in the host community. \\
+PR rating / CL rating & Political Rights and Civil Liberties ratings (1–7). & \textbf{Key}: Strong holistic predictors of Status. \\
 \hline
 
-Others of concern & The total number of individuals who are not included in the main categories but are of concern to humanitarian organizations. \\
+PR, A, B, C & Aggregate political rights scores. & \textbf{Key}: Capture core governance and participation variables. \\
 \hline
 
-Country/Territory & The name of the country or territory. \\
+A1–A3 & Electoral process subscores. & Important but collinear with PR. \\
 \hline
 
-Region & The geographic region of the country or territory. \\
+B1–B4 & Political pluralism subscores. & Important but collinear with B. \\
 \hline
 
-C/T & Indicates if the entry is a country (c) or territory (t). \\
+C1–C3 & Functioning of government subscores. & Predictive of corruption and state capacity. \\
 \hline
 
-Edition & The year of the report. \\
+CL, D, E, F, G & Aggregate civil liberties & \textbf{Key}: Drive variation in Status alongside PR. \\
 \hline
 
-Status & The overall freedom status: F (Free), PF (Partly Free), or NF (Not Free). \\
+D1–D4 & Expression & Informative but redundant with D/CL. \\
 \hline
 
-PR rating & The Political Rights Rating, on a scale of 1 (least free) to 7 (most free). \\
+E1–E3 & Association rights & '' \\
 \hline
 
-CL rating & The Civil Liberties Rating, on a scale of 1 (least free) to 7 (most free). \\
+F1–F4 & Rule of law subscores & '' \\
 \hline
 
-PR & The aggregate score for the Political Rights category, based on sub-scores from A, B, and C. \\
+G1–G4 & Autonomy and individual rights & '' \\
 \hline
 
-A1 to A3 & Sub-scores for the A. Electoral Process subcategory. \\
+Add Q / Add A & Discretionary question scores. & Minor additional signal. \\
 \hline
 
-A & The aggregate score for the A. Electoral Process subcategory. \\
-\hline
-
-B1 to B4 & Sub-scores for the B. Political Pluralism and Participation subcategory. \\
-\hline
-
-B & The aggregate score for the B. Political Pluralism and Participation subcategory. \\
-\hline
-
-C1 to C3 & Sub-scores for the C. Functioning of Government subcategory. \\
-\hline
-
-C & The aggregate score for the C. Functioning of Government subcategory. \\
-\hline
-
-CL & The aggregate score for the Civil Liberties category, based on sub-scores from D, E, F, and G. \\
-\hline
-
-D1 to D4 & Sub-scores for the D. Freedom of Expression and Belief subcategory. \\
-\hline
-
-D & The aggregate score for the D. Freedom of Expression and Belief subcategory. \\
-\hline
-
-E1 to E3 & Sub-scores for the E. Associational and Organizational Rights subcategory. \\
-\hline
-
-E & The aggregate score for the E. Associational and Organizational Rights subcategory. \\
-\hline
-
-F1 to F4 & Sub-scores for the F. Rule of Law subcategory. \\
-\hline
-
-F & The aggregate score for the F. Rule of Law subcategory. \\
-\hline
-
-G1 to G4 & Sub-scores for the G. Personal Autonomy and Individual Rights subcategory. \\
-\hline
-
-G & The aggregate score for the G. Personal Autonomy and Individual Rights subcategory. \\
-\hline
-
-Add Q & The score for Additional Discretionary Question Q. (Formerly Add B) \\
-\hline
-
-Add A & The score for Additional Discretionary Question A. \\
-\hline
-
-Total & The aggregate score for all categories. \\
+Total & Overall FIW score. & \textbf{Very strong predictor of Status (almost deterministic).} \\
 \hline
 
 \end{tabular}
-\end{small}
+\end{scriptsize}
 \end{center}
 \vskip -0.1in
 \end{table}
+
+
+
+
 
 
 \section{Methods and Results}
@@ -315,6 +266,9 @@ The primary statistical metrics calculated on the log-transformed target variabl
 \subsubsection*{Domain-Specific Metrics (Original Scale)}
 To ensure the model's predictions are interpretable in the context of real-world refugee counts, the predictions $\hat{Y}$ will be inverse-transformed back to the original scale using the formula: $$\text{Predicted Refugees} = \exp(\hat{Y}) - 1$$ The model's final performance will be assessed using Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE).
 
+\subsection{Results}
+
+charts and stuff
 
 \section{Conclusion}
 \label{conclusion}
