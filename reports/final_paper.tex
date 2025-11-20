@@ -148,7 +148,6 @@ These datasets do consist limitations, such that refugee statistics often underr
 \subsection{Data Cleaning}
 Data cleaning was performed across all three datasets to ensure readiness for integration and analysis. The **UNHCR Persons of Concern** data required only initial inspection, as its integrity was confirmed. For the **Freedom in the World (FIW)** data, preparation involved loading with specified sheet/header, **renaming columns** for clarity (e.g., \texttt{Total} to \texttt{Freedom Total Score}), dropping a descriptive row, and **converting relevant columns** to numeric types. The **UCDP Priority Conflict Data** required the most specialized preparation, involving **data aggregation** by country and year to sum the \texttt{intensity\_level} and generate country-year level features (e.g., \texttt{asylum\_conflict\_total\_conflict\_intensity}) for the Random Forest Regressor model.
 
-
 \subsection{Data Dictionary}
 
 \begin{table}[H]
