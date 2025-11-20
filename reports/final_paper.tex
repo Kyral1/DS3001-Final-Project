@@ -60,6 +60,15 @@
 % Therefore, a short form for the running title is supplied here:
 \icmltitlerunning{Submission and Formatting Instructions for ICML 2025}
 
+% tighten caption + float spacing
+\usepackage{caption}
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\belowcaptionskip}{2pt}
+\setlength{\intextsep}{4pt}
+\setlength{\floatsep}{6pt}
+\setlength{\textfloatsep}{6pt}
+\captionsetup[table]{justification=raggedright,singlelinecheck=false}
+
 \begin{document}
 
 \twocolumn[
@@ -139,23 +148,19 @@ These datasets do consist limitations, such that refugee statistics often underr
 \subsection{Data Cleaning}
 Data cleaning was performed across all three datasets to ensure readiness for integration and analysis. The **UNHCR Persons of Concern** data required only initial inspection, as its integrity was confirmed. For the **Freedom in the World (FIW)** data, preparation involved loading with specified sheet/header, **renaming columns** for clarity (e.g., \texttt{Total} to \texttt{Freedom Total Score}), dropping a descriptive row, and **converting relevant columns** to numeric types. The **UCDP Priority Conflict Data** required the most specialized preparation, involving **data aggregation** by country and year to sum the \texttt{intensity\_level} and generate country-year level features (e.g., \texttt{asylum\_conflict\_total\_conflict\_intensity}) for the Random Forest Regressor model.
 
+
 \subsection{Data Dictionary}
 
 \begin{table}[H]
-\caption{Data Dictionary with Predictive Relevance for Refugee Prediction Model}
-\label{tab:data_dict_final}
-\vskip 0.1in
-\begin{center}
-\begin{tiny} % Changed to TINY to force the table to fit on one page
+\caption{Refugee and Related Variables (\texttt{persons\_of\_concern.csv})}
+\label{tab:data_dict_refugee}
+\centering
+\begin{tiny}
 \renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{3pt} % Reduced column padding slightly
-
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
 \hline
 \textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
-\hline
-\hline
-\multicolumn{3}{|l|}{\textbf{Refugee and Related Variables (\texttt{persons\_of\_concern.csv})}} \\
 \hline
 Refugees & Number of people recognized as refugees under international mandate. & \textbf{TARGET VARIABLE}: The primary focus of prediction. \\
 \hline
@@ -169,8 +174,20 @@ ISO Codes & ISO 3166-1 alpha-3 identifiers for merging. & Necessary for joining 
 \hline
 Host community & Host population size. & Minor contextual control variable. \\
 \hline
+\end{tabular}
+\end{tiny}
+\end{table}
+
+\begin{table}[H]
+\caption{Conflict Variables (\texttt{UcdpPrioConflict\_v25\_1.csv} and Derived)}
+\label{tab:data_dict_conflict}
+\centering
+\begin{tiny}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
 \hline
-\multicolumn{3}{|l|}{\textbf{Conflict Variables (\texttt{UcdpPrioConflict\_v25\_1.csv} and Derived)}} \\
+\textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
 \texttt{intensity\_level} & The year's intensity of the conflict (1=Minor, 2=War). & \textbf{Key}: Captures the severity of active conflict. \\
 \hline
@@ -180,8 +197,20 @@ Host community & Host population size. & Minor contextual control variable. \\
 \hline
 \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} & Total cumulative conflict intensity in the country of asylum. & \textbf{Key}: Important predictor (Importance: 0.128), reflecting long-term host country stability. \\
 \hline
+\end{tabular}
+\end{tiny}
+\end{table}
+
+\begin{table}[H]
+\caption{Freedom Variables (\texttt{All\_data\_FIW\_2013-2021.xlsx})}
+\label{tab:data_dict_freedom}
+\centering
+\begin{tiny}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
 \hline
-\multicolumn{3}{|l|}{\textbf{Freedom Variables (\texttt{All\_data\_FIW\_2013-2021.xlsx})}} \\
+\textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
 \texttt{Freedom\_Score\break\_Difference} & The difference in FIW Total scores between the Country of Origin and Asylum. & \textbf{Key}: Highly important feature (Importance: 0.107), capturing the 'push' vs. 'pull' factor. \\
 \hline
@@ -195,8 +224,20 @@ PR, CL, A–G Aggregates & Aggregate sub-scores for all categories (e.g., A. Ele
 \hline
 A1–G4 Subscores & Individual sub-scores (e.g., A1. Head of government/legislative selection). & Informative but generally collinear with the PR/CL aggregates. \\
 \hline
+\end{tabular}
+\end{tiny}
+\end{table}
+
+\begin{table}[H]
+\caption{Contextual Variables}
+\label{tab:data_dict_context}
+\centering
+\begin{tiny}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
 \hline
-\multicolumn{3}{|l|}{\textbf{Contextual Variables}} \\
+\textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
 Year / Edition & Year of observation and report edition. & Useful for trends/time-series effects. \\
 \hline
@@ -206,10 +247,7 @@ C/T & Country vs. territory indicator. & Minor structural variable. \\
 \hline
 \end{tabular}
 \end{tiny}
-\end{center}
-\vskip -0.1in
 \end{table}
-
 
 
 \section{Methods and Results}
@@ -219,12 +257,22 @@ C/T & Country vs. territory indicator. & Minor structural variable. \\
 The primary objective of this project is to create a robust predictive model that quantifies the relationship between political/civil liberties, active conflict, and refugee migration flows. We frame our task as a \textbf{regression problem}, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model training (Random Forest Regressor), and model validation and assessment. Given the complex, non-linear, and multi-faceted nature of conflict and political stability affecting human migration, we employ a non-parametric approach using a diverse set of features.
 
 \subsubsection*{Feature Engineering and Data Integration}
+
 The model integrates data from three primary sources:
+\begin{samepage}
+\begingroup
+\setlength{\emergencystretch}{1em}
+\sloppy
+
 \begin{enumerate}
-    \item \textbf{UNHCR Persons of Concern} (\texttt{persons\_of\_concern.csv}): Provides the target variable, \textbf{Refugees}.
-    \item \textbf{Freedom in the World (FIW) Index} (\texttt{All\_data\_FIW\_2013-2021.xlsx}): Provides political/civil liberties scores.
-    \item \textbf{UCDP Priority Conflict Data} (\texttt{UcdpPrioConflict\_v25\_1.csv}): Provides annual conflict intensity and cumulative intensity data.
+    \item \textbf{UNHCR Persons of Concern} (\texttt{persons\_of\_concern.csv}): Provides the target variable, \textbf{Refugees}.
+    \item \textbf{Freedom in the World (FIW) Index} (\texttt{All\_data\_FIW\_2013-2021.xlsx}): Provides political/civil liberties scores.
+    \item \textbf{UCDP Priority Conflict Data} (\texttt{UcdpPrioConflict\_v25\_1.csv}): Provides annual conflict intensity and cumulative intensity data.
 \end{enumerate}
+
+\endgroup
+\end{samepage}
+
 To create the final analytic dataset of approximately 99,946 unique country–pair–year observations (2013–2021), we performed a series of feature engineering and integration steps:
 
 \begin{enumerate}
@@ -248,11 +296,11 @@ We selected a \textbf{Random Forest regression (RFR)} as our predictive model.
     \caption{Image of a random Forest Regression model.}
     \label{fig:placeholder}
 \end{figure}
- This choice is justified by its suitability for the complex and high-dimensional nature of our features:
+This choice is justified by its suitability for the complex and high-dimensional nature of our features:
 \begin{enumerate}
-    \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of **conflict intensity** in the asylum country is conditional on the **origin country's freedom score**). This avoids the need for manual specification of complex interaction terms.
-    \item \textbf{Robustness to Mixed Data:} RFR is robust against outliers and effectively handles a mix of continuous, categorical, and count data. This is particularly beneficial when combining disparate features like raw population counts (\texttt{asylum} seekers), ordinal ratings (FIW scores), and aggregated intensity metrics (UCDP conflict).
-    \item \textbf{Feature Importance and Interpretability:} The RFR provides a quantitative measure of \textbf{feature importance}, which is critical to the interpretability of the model. This allows us to definitively rank and assess the influence of **conflict intensity**, **political freedom differences**, and traditional **asylum-seeker counts** on migration rates. The significance analysis revealed that the main drivers were \texttt{asylum\_conflict\_total\break\_conflict\_intensity} (0.178), \texttt{asylum} seekers (0.156) and \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} (0.128).
+    \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of **conflict intensity** in the asylum country is conditional on the **origin country's freedom score**). This avoids the need for manual specification of complex interaction terms.
+    \item \textbf{Robustness to Mixed Data:} RFR is robust against outliers and effectively handles a mix of continuous, categorical, and count data. This is particularly beneficial when combining disparate features like raw population counts (\texttt{asylum} seekers), ordinal ratings (FIW scores), and aggregated intensity metrics (UCDP conflict).
+    \item \textbf{Feature Importance and Interpretability:} The RFR provides a quantitative measure of \textbf{feature importance}, which is critical to the interpretability of the model. This allows us to definitively rank and assess the influence of **conflict intensity**, **political freedom differences**, and traditional **asylum-seeker counts** on migration rates. The significance analysis revealed that the main drivers were \texttt{asylum\_conflict\_total\break\_conflict\_intensity} (0.178), \texttt{asylum} seekers (0.156) and \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} (0.128).
 \end{enumerate}
 
 \subsection{Model Training Procedure}
@@ -262,9 +310,9 @@ The engineered dataset was partitioned into training and testing sets using an 8
 \subsubsection*{Hyperparameter Optimization}
 To optimize the model’s generalization performance and mitigate overfitting, we performed \textbf{cross-validated hyperparameter tuning}. We utilized a 5-fold cross-validation and a Randomized Search to efficiently explore the parameter space. Key hyperparameters optimized included:
 \begin{itemize}
-    \item \textbf{$\mathbf{n\_{estimators}}$}: The number of decision trees in the forest.
-    \item $\mathbf{max\_{depth}}$: The maximum depth of each individual decision tree.
-    \item $\mathbf{min\_{samples\_split}}$: The minimum number of samples required to split an internal node.
+    \item \textbf{$\mathbf{n\_{estimators}}$}: The number of decision trees in the forest.
+    \item $\mathbf{max\_{depth}}$: The maximum depth of each individual decision tree.
+    \item $\mathbf{min\_{samples\_split}}$: The minimum number of samples required to split an internal node.
 \end{itemize}
 The model's performance during cross-validation was evaluated using the negative Mean Squared Error (MSE) on the log-transformed target, with the objective of selecting the parameter combination that minimizes MSE.
 
@@ -274,8 +322,8 @@ The trained Random Forest Regressor will be evaluated on the withheld test set u
 \subsubsection*{Statistical Metrics (Log Scale)}
 The primary statistical metrics calculated on the log-transformed target variable ($Y$) and its prediction ($\hat{Y}$) are:
 \begin{itemize}
-    \item $\mathbf{R^2}$ \textbf{Score}: Measures the proportion of variance in the log-transformed refugee counts that is predictable from the features.
-    \item \textbf{Root Mean Squared Error (RMSE)}: Measures the magnitude of the errors on the log scale.
+    \item $\mathbf{R^2}$ \textbf{Score}: Measures the proportion of variance in the log-transformed refugee counts that is predictable from the features.
+    \item \textbf{Root Mean Squared Error (RMSE)}: Measures the magnitude of the errors on the log scale.
 \end{itemize}
 
 \subsubsection*{Domain-Specific Metrics (Original Scale)}
@@ -287,8 +335,8 @@ $$\text{Predicted Refugees} = \exp(\hat{Y}) - 1$$
 \end{center}
 The model's final performance, relevant for practical application, will be assessed using:
 \begin{itemize}
-    \item \textbf{Mean Absolute Error (MAE)}: Provides the average magnitude of error in terms of raw refugee counts.
-    \item \textbf{Mean Absolute Percentage Error (MAPE)}: Provides a percentage error metric, though this can be sensitive to low actual count values.
+    \item \textbf{Mean Absolute Error (MAE)}: Provides the average magnitude of error in terms of raw refugee counts.
+    \item \textbf{Mean Absolute Percentage Error (MAPE)}: Provides a percentage error metric, though this can be sensitive to low actual count values.
 \end{itemize}
 
 
