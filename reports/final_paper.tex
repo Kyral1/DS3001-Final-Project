@@ -285,16 +285,15 @@ To create the final analytic dataset of approximately 99,946 unique country–pa
 \end{enumerate}
 
 \subsection{Model Justification: Random Forest Regressor}
-We selected a \textbf{Random Forest regression (RFR)} as our predictive model. 
+We selected a \textbf{Random Forest regression (RFR)} as our predictive model. A sample model can be seen in the figure below. 
 
-
-
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{reports/Random_Forest_Regression.png}
-    \caption{Image of a random Forest Regression model.}
-    \label{fig:placeholder}
+    \includegraphics[width=3.2in]{reports/Random_Forest_Regression.png}
+    \caption{Sample Random Forest Regression Model}
+    \label{sample model}
 \end{figure}
+
 This choice is justified by its suitability for the complex and high-dimensional nature of our features:
 \begin{enumerate}
     \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of **conflict intensity** in the asylum country is conditional on the **origin country's freedom score**). This avoids the need for manual specification of complex interaction terms.
