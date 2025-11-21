@@ -288,8 +288,8 @@ To create the final analytic dataset of approximately 99,946 unique country–pa
 We selected a \textbf{Random Forest regression (RFR)} as our predictive model. A sample model can be seen in the figure below. 
 
 \begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Random_Forest_Regression.png}
     \centering
-    \includegraphics[width=3.2in]{reports/Random_Forest_Regression.png}
     \caption{Sample Random Forest Regression Model}
     \label{sample model}
 \end{figure}
@@ -337,10 +337,54 @@ The model's final performance, relevant for practical application, will be asses
     \item \textbf{Mean Absolute Percentage Error (MAPE)}: Provides a percentage error metric, though this can be sensitive to low actual count values.
 \end{itemize}
 
-
 \subsection{Results}
+To assess how well the Random Forest model predicts refugee movements, we examined its predictions alongside several diagnostic plots. These results reveal both the strengths of the model and the challenges posed by extreme or zero-inflated refugee data.
 
-charts and stuff
+The below plot highlights the uneven distribution of refugee counts in the dataset, with a large concentration of points at zero. The model tends to slightly over-predict refugee movement in cases where the actual count is zero, which is typical in zero-inflated datasets where most country-pairs experience no movement in any given year. For higher values, the model shows substantial spread around the 45-degree reference line, indicating inconsistent accuracy. Notably, the model appears to under-predict large refugee flows, with many points falling below the line when actual values are high. This idea reflects the tendency of Random Forests to smooth out extreme values and struggle with rare, high-magnitude events. 
+
+\begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Actual_Predicted_Plot.png}
+    \centering
+    \caption{Actual vs. Predicted Refugee Counts (Linear Scale)}
+    \label{actual predicted linear}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Distribution_Residuals_Plot.png}
+    \centering
+    \caption{Distribution of Residuals}
+    \label{distribution}
+\end{figure}
+
+In the above Figure 3, the distribution of residuals shows that the Random Forest Regressor's errors are centered closely around zero, indicating that the model does not systematically over or under-predict refugee flows on average. The histogram is approximately symmetric, although it exhibits long tails in both directions. These tails reflect that, while most predictions are fairly accurate, the model occasionally makes large errors, mostly for rare or extreme refugee movement events. This behavior is expected in migration and conflict-related datasets, which often contain sudden spikes associated with geopolitical events. Overall, the residual histogram suggests that the model performs reasonably well but struggles to capture more volatile refugee flows.
+
+\begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Residual_Plot.png}
+    \centering
+    \caption{Predicted vs. Residuals Plot}
+    \label{predicted residuals}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Actual_Residuals_Plot.png}
+    \centering
+    \caption{Actual vs. Residuals Plot}
+    \label{actual residuals}
+\end{figure}
+
+Figures 4 and 5 represent the model's residuals against both predicted and actual refugee counts, respectively. This helps illustrate how error patterns vary across the full range of values. The plots reveal a widening spread of residuals as predictions increase, indicating that uncertainty grows when the model attempts to estimate higher refugee flows. The funnel-shaped pattern suggests that while the model remains stable for low and moderate predictions, it becomes increasingly inconsistent as it encounters larger and less frequency displacement events.
+
+When examined against actual values, the residuals show a similar trend. Small and zero flows, which make up a majority of the dataset, are predicted reasonably well, with errors remaining close to zero. In contrast, large displacement events produce substantially larger residuals and are consistently under predicted, highlighting the model's tendency to smooth extreme outcomes toward the center. This behavior reflects the inherent difficulty of modeling rare, conflict-driven surges in refugee movement, where dramatic spikes may occur that are hard for data-driven methods, such as our model, to anticipate. Together, these results show the limitations of tree-based models when applied to highly skewed, zero-inflated outcomes.
+
+Lastly, in the below plot of the log-scaled Actual versus Predicted plot, a clearer view of model performance across the full range of refugee counts can be seen. When scaling the data, the extreme values are compressed, separating the dense cluster of zero and low-value cases. On the log scale, mid-range events exhibit a more coherent linear relationship, indicating that the model captures moderate refugee movements relatively well. However, the highest values still show a significant downward deviation from the 45-degree line, reinforcing that the model underestimates the largest displacement events. The column of points at zero on the log scale emphasizes the heavily zero-inflated nature of the dataset, and the model's tendency to slightly over-predict in these cases. Overall, the log-scale plot highlights both the strengths and limitations of our model.
+
+\begin{figure}[H]
+    \includegraphics[width=3.2in]{reports/figures/Log_Scale_Plot.png}
+    \centering
+    \caption{Actual vs. Predicted (Log Scale)}
+    \label{log scale}
+\end{figure}
+
 
 \section{Conclusion}
 \label{conclusion}
