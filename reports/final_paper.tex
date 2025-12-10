@@ -296,7 +296,7 @@ We selected a Random Forest regression (RFR) as our predictive model. A sample m
 
 This choice is justified by its suitability for the complex and high-dimensional nature of our features:
 \begin{enumerate}
-    \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of **conflict intensity** in the asylum country is conditional on the **origin country's freedom score**). This avoids the need for manual specification of complex interaction terms.
+    \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of conflict intensity in the asylum country is conditional on the origin country's freedom score). This avoids the need for manual specification of complex interaction terms.
     \item \textbf{Robustness to Mixed Data:} RFR is robust against outliers and effectively handles a mix of continuous, categorical, and count data. This is particularly beneficial when combining disparate features like raw population counts (\texttt{asylum} seekers), ordinal ratings (FIW scores), and aggregated intensity metrics (UCDP conflict).
     \item \textbf{Feature Importance and Interpretability:} The RFR provides a quantitative measure of feature importance, which is critical to the interpretability of the model. This allows us to definitively rank and assess the influence of conflict intensity, political freedom differences, and traditional asylum-seeker counts on migration rates. The significance analysis revealed that the main drivers were \texttt{asylum\_conflict\_total\break\_conflict\_intensity} (0.178), \texttt{asylum} seekers (0.156) and \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} (0.128).
 \end{enumerate}
@@ -403,6 +403,11 @@ The feature importance analysis, a major strength of the Random Forest methodolo
 \end{itemize}
 These results confirm that migration patterns are multivariate, driven by a balance of push factors (conflict, lack of freedom) and pull factors (regional stability and existing displacement networks).
 
+\subsection{Model Comparison}
+After creating and testing our Random Forest Regressor model we decided to test another model for comparison. We implemented and trained a Gradient Boosting Regressor model with default parameters (n\_estimators=100, learning\_rate=0.1, max\_depth=3). The results showed the Random Forest Regressor to be more accurate. The Gradient Boosting Regressor model achieved a mean absolute error (MAE) of 25.6997, a mean squared error (MSE) of 1452.2889, and an R-squared (R2) of 0.5544. Additionally, the Random Forest Regressor had a  $15.9\%$ lower MAE, $19.3\%$ lower MSE, and an $8.5\%$ higher R2 score than the Gradient Boosting Regressor.
+
+The Random Forest Regressor's out performance could be due to its inherent ability to handle complex non-linear relationships and its ensemble nature, which averages predictions from multiple decision trees. Gradient Boosting models, while powerful, can sometimes be more sensitive to hyperparameter tuning and might require more aggressive optimization to surpass Random Forests in certain datasets.
+
 \subsection{Defense Against Criticism and Model Limitations}
 
 The main point of critique for this project is often the performance metrics, particularly the $R^2$ score of $0.532$ and the large Mean Squared Error (MSE) of $492,355,882.55$. These numbers, though seemingly modest, are justifiable given the context of the problem:
@@ -442,6 +447,18 @@ Our project established a link between sociopolitical indicators and forced disp
 
 \begin{thebibliography}{99} 
 
+\bibitem[Freedom House(2025)]{freedomhouse2025}
+Freedom House.
+\newblock *Freedom in the World*.
+\newblock Technical report, Freedom House, Washington, DC, 2025.
+\newblock \url{https://freedomhouse.org/report/freedom-world}
+
+\bibitem[UCDP/PRIO(2025)]{ucdpprio2025}
+UCDP/PRIO.
+\newblock *UCDP/PRIO Armed Conflict Dataset, Version 25.1*.
+\newblock Technical report, Uppsala Conflict Data Program and Peace Research Institute Oslo, Uppsala and Oslo, 2025.
+\newblock \url{https://ucdp.uu.se/downloads/index.html#armedconflict}
+
 \bibitem[UNHCR(2025)]{unhcr2025}
 UNHCR.
 \newblock *Refugee Statistics – Operational Data Portal*.
@@ -453,12 +470,6 @@ World Bank.
 \newblock *World Development Indicators*.
 \newblock Technical report, The World Bank, Washington, DC, 2025.
 \newblock \url{https://databank.worldbank.org/source/world-development-indicators}
-
-\bibitem[Freedom House(2025)]{freedomhouse2025}
-Freedom House.
-\newblock *Freedom in the World*.
-\newblock Technical report, Freedom House, Washington, DC, 2025.
-\newblock \url{https://freedomhouse.org/report/freedom-world}
 
 \end{thebibliography}
 
