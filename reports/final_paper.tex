@@ -138,15 +138,15 @@ The Freedom in the World dataset, published annually by Freedom House, provides 
 To better capture the extreme push factors driving displacement, we integrated the \texttt{UcdpPrioConflict\_v25\_1.csv} dataset, which records annual data on organized state-based conflict. This data provides the \texttt{intensity\_level} (1 for minor conflict, 2 for war), allowing us to quantify the severity of active violence. The UCDP data is primarily used to generate conflict metrics for the asylum country, such as total annual and cumulative conflict intensity, serving as critical predictors of migration flow.
 
 \subsubsection*{UNHCR Persons of Concern Data}
-The UNHCR Persons of Concern dataset contains annual records beginning in 2004, organized by year, country of origin, and country of asylum. For each country pair, the dataset reports counts of various displaced groups, including refugees, asylum-seekers, internally displaced persons (IDPs), stateless persons, and others of concern. These values reflect the scale of displacement across borders and within states. These values provide the \textbf{dependent variable} in our analysis, which is the amount of refugee movement from one country to another in a given year.
+The UNHCR Persons of Concern dataset contains annual records beginning in 2004, organized by year, country of origin, and country of asylum. For each country pair, the dataset reports counts of various displaced groups, including refugees, asylum-seekers, internally displaced persons (IDPs), stateless persons, and others of concern. These values reflect the scale of displacement across borders and within states. These values provide the dependent variable in our analysis, which is the amount of refugee movement from one country to another in a given year.
 
-The unit of analysis in our study is the **country-pair-year observation**, which links refugee flows from an origin country to an asylum country in a given year with their corresponding freedom index values and conflict intensity measures. This allows us to test hypotheses about how political repression, democratic governance, civil liberties, and active conflict shape refugee migration. While the UNHCR data captures migration outcomes, the Freedom House and UCDP data provide measures of the political and violence conditions that act as push and pull factors.
+The unit of analysis in our study is the country-pair-year observation, which links refugee flows from an origin country to an asylum country in a given year with their corresponding freedom index values and conflict intensity measures. This allows us to test hypotheses about how political repression, democratic governance, civil liberties, and active conflict shape refugee migration. While the UNHCR data captures migration outcomes, the Freedom House and UCDP data provide measures of the political and violence conditions that act as push and pull factors.
 
 These datasets do consist limitations, such that refugee statistics often underrepresented the quantities of undocumented displacement, and the Freedom House scores, while widely used, are based partly on subjective assessments. Additionally, the UCDP data focuses only on organized, state-based violence. Despite this, their examination provides a unique opportunity to connect quantitative migration patterns with qualitative assessments of political freedom and conflict.
 
 
 \subsection{Data Cleaning}
-Data cleaning was performed across all three datasets to ensure readiness for integration and analysis. The **UNHCR Persons of Concern** data required only initial inspection, as its integrity was confirmed. For the **Freedom in the World (FIW)** data, preparation involved loading with specified sheet/header, **renaming columns** for clarity (e.g., \texttt{Total} to \texttt{Freedom Total Score}), dropping a descriptive row, and **converting relevant columns** to numeric types. The **UCDP Priority Conflict Data** required the most specialized preparation, involving **data aggregation** by country and year to sum the \texttt{intensity\_level} and generate country-year level features (e.g., \texttt{asylum\_conflict\_total\_conflict\_intensity}) for the Random Forest Regressor model.
+Data cleaning was performed across all three datasets to ensure readiness for integration and analysis. The UNHCR Persons of Concern data required only initial inspection, as its integrity was confirmed. For the Freedom in the World (FIW) data, preparation involved loading with specified sheet/header, renaming columns** for clarity (e.g., \texttt{Total} to \texttt{Freedom Total Score}), dropping a descriptive row, and converting relevant columns to numeric types. The UCDP Priority Conflict Data** required the most specialized preparation, involving data aggregation by country and year to sum the \texttt{intensity\_level} and generate country-year level features (e.g., \texttt{asylum\_conflict\_total\_conflict\_intensity}) for the Random Forest Regressor model.
 
 \subsection{Data Dictionary}
 
@@ -253,7 +253,7 @@ C/T & Country vs. territory indicator. & Minor structural variable. \\
 \label{methods}
 
 \subsection{Method Overview}
-The primary objective of this project is to create a robust predictive model that quantifies the relationship between political/civil liberties, active conflict, and refugee migration flows. We frame our task as a \textbf{regression problem}, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model training (Random Forest Regressor), and model validation and assessment. Given the complex, non-linear, and multi-faceted nature of conflict and political stability affecting human migration, we employ a non-parametric approach using a diverse set of features.
+The primary objective of this project is to create a robust predictive model that quantifies the relationship between political/civil liberties, active conflict, and refugee migration flows. We frame our task as a regression problem, where the dependent variable is the count of refugees from a given origin country to an asylum country in a specific year. The core methodology involves three phases: feature engineering and data integration, predictive model training (Random Forest Regressor), and model validation and assessment. Given the complex, non-linear, and multi-faceted nature of conflict and political stability affecting human migration, we employ a non-parametric approach using a diverse set of features.
 
 \subsubsection*{Feature Engineering and Data Integration}
 
@@ -275,17 +275,17 @@ The model integrates data from three primary sources:
 To create the final analytic dataset of approximately 99,946 unique country–pair–year observations (2013–2021), we performed a series of feature engineering and integration steps:
 
 \begin{enumerate}
-    \item \textbf{FIW Integration (Push and Pull Factors):} We joined the FIW scores twice to capture the \textbf{Origin Country's} score ($F_{\text{Origin}}$) as a \textbf{push factor} (low freedom score predicts high migration) and the \textbf{Asylum Country's} score ($F_{\text{Asylum}}$) as a \textbf{pull factor} (high freedom score predicts high immigration).
+    \item \textbf{FIW Integration (Push and Pull Factors):} We joined the FIW scores twice to capture the Origin Country's score ($F_{\text{Origin}}$) as a push factor (low freedom score predicts high migration) and the \textbf{Asylum Country's} score ($F_{\text{Asylum}}$) as a \textbf{pull factor} (high freedom score predicts high immigration).
 
     \item \textbf{Conflict Feature Generation:} The UCDP data was aggregated and merged to derive conflict indicators primarily for the Asylum country, hypothesized to diminish its pull factor, specifically the annual sum of active conflict intensity (\textbf{\texttt{asylum\_conflict\_total\break\_conflict\_intensity}}) and the total sum of historical conflict intensity (\textbf{\texttt{asylum\_conflict\_total\break\_cumulative\_intensity}}).
 
-    \item \textbf{Differential Feature Creation:} A crucial engineered characteristic, \textbf{\texttt{Freedom\_Score\_Difference}} ($F_{\text{Origin}} - F_{\text{Asylum}}$), was calculated to holistically capture the political disparity between the two countries, which is hypothesized to be a strong determinant of the flow magnitude.
+    \item \textbf{Differential Feature Creation:} A crucial engineered characteristic, \texttt{Freedom\_Score\_Difference} ($F_{\text{Origin}} - F_{\text{Asylum}}$), was calculated to holistically capture the political disparity between the two countries, which is hypothesized to be a strong determinant of the flow magnitude.
 
-    \item \textbf{Target Transformation:} The target variable, $\textbf{Refugees}$, is highly biased. To achieve a more normal distribution and stabilize the variance of the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The final data set engineered consists of the full set of characteristics (FIW scores, conflict metrics, difference scores, and other contextual variables such \texttt{as} asylum seekers) and the target variable $Y$.
+    \item \textbf{Target Transformation:} The target variable, Refugees, is highly biased. To achieve a more normal distribution and stabilize the variance of the regression model, we applied a logarithmic transformation: $Y = \log(1 + \text{Refugees})$. The final data set engineered consists of the full set of characteristics (FIW scores, conflict metrics, difference scores, and other contextual variables such \texttt{as} asylum seekers) and the target variable $Y$.
 \end{enumerate}
 
 \subsection{Model Justification: Random Forest Regressor}
-We selected a \textbf{Random Forest regression (RFR)} as our predictive model. A sample model can be seen in the figure below. 
+We selected a Random Forest regression (RFR) as our predictive model. A sample model can be seen in the figure below. 
 
 \begin{figure}[H]
     \includegraphics[width=3.2in]{reports/figures/Random_Forest_Regression.png}
@@ -298,7 +298,7 @@ This choice is justified by its suitability for the complex and high-dimensional
 \begin{enumerate}
     \item \textbf{Handling Non-linearity and Interactions:} The RFR, an ensemble method based on decision trees, can inherently capture highly non-linear relationships and intricate interaction effects among the diverse features (e.g., how the effect of **conflict intensity** in the asylum country is conditional on the **origin country's freedom score**). This avoids the need for manual specification of complex interaction terms.
     \item \textbf{Robustness to Mixed Data:} RFR is robust against outliers and effectively handles a mix of continuous, categorical, and count data. This is particularly beneficial when combining disparate features like raw population counts (\texttt{asylum} seekers), ordinal ratings (FIW scores), and aggregated intensity metrics (UCDP conflict).
-    \item \textbf{Feature Importance and Interpretability:} The RFR provides a quantitative measure of \textbf{feature importance}, which is critical to the interpretability of the model. This allows us to definitively rank and assess the influence of **conflict intensity**, **political freedom differences**, and traditional **asylum-seeker counts** on migration rates. The significance analysis revealed that the main drivers were \texttt{asylum\_conflict\_total\break\_conflict\_intensity} (0.178), \texttt{asylum} seekers (0.156) and \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} (0.128).
+    \item \textbf{Feature Importance and Interpretability:} The RFR provides a quantitative measure of feature importance, which is critical to the interpretability of the model. This allows us to definitively rank and assess the influence of conflict intensity, political freedom differences, and traditional asylum-seeker counts on migration rates. The significance analysis revealed that the main drivers were \texttt{asylum\_conflict\_total\break\_conflict\_intensity} (0.178), \texttt{asylum} seekers (0.156) and \texttt{asylum\_conflict\_total\break\_cumulative\_intensity} (0.128).
 \end{enumerate}
 
 \subsection{Model Training Procedure}
@@ -410,7 +410,7 @@ The main point of critique for this project is often the performance metrics, pa
 \begin{enumerate}
     \item \textbf{Complexity of Social Phenomena:} Unlike models built on deterministic physical processes, predicting human migration is inherently subject to high variance due to unquantifiable factors, such as abrupt policy changes, social media-driven political movements, or unpredictable local events. Achieving an $R^2$ that accounts for over $53\%$ of the variance in this chaotic, real-world environment demonstrates significant validity and utility.
     \item \textbf{Data Quality and Sparsity:} The project faced substantial challenges in data preparation . The merging of three independent datasets introduced significant data sparsity and missing values, especially when aligning country-year pairs. Given that the final model was trained on data that required numerous rows with missing values to be dropped or simplified, the model's performance is, in part, a reflection of the available public data quality, rather than a failing of the modeling technique itself. The complexity of integrating political, conflict, and humanitarian records from different organizations inherently limits the achievable upper bound of accuracy.
-    \item \textbf{Interpretability as Priority:} The choice of the Random Forest Regressor was a conscious design decision. While more complex, black-box models like deep learning networks might potentially achieve a slightly higher $R^2$, the Random Forest provides clear, localized feature importance scores. For a policy-driven model, understanding *why* a prediction is being made (e.g., "high conflict intensity in the receiving region is the primary driver") is critically more important than achieving a marginal gain in pure numerical accuracy.
+    \item \textbf{Interpretability as Priority:} The choice of the Random Forest Regressor was a conscious design decision. While more complex, black-box models like deep learning networks might potentially achieve a slightly higher $R^2$, the Random Forest provides clear, localized feature importance scores. For a policy-driven model, understanding why a prediction is being made (e.g., "high conflict intensity in the receiving region is the primary driver") is critically more important than achieving a marginal gain in pure numerical accuracy.
 \end{enumerate}
 
 In defense, the project's success lies not just in its predictive score, but in its ability to provide an **interpretable, explainable baseline** that policymakers can trust and act upon, validating the influence of governance and conflict metrics.
@@ -422,24 +422,23 @@ To further enhance the predictive power and utility of this model, the following
 \begin{enumerate}[label=\alph*)]
     \item \textbf{Advanced Imputation and Data Enrichment:}
     \begin{itemize}
-        \item Instead of using simple zero-filling or row dropping for missing data, implementing **Multiple Imputation by Chained Equations (MICE)** or \textbf{K-Nearest Neighbors (kNN) imputation} should be explored. These methods generate more realistic estimates of missing values, potentially stabilizing the model and enriching the feature set.
-        \item Integrate **Economic Indicators** (e.g., GDP per capita, inflation, and income inequality from the World Bank) and \textbf{Climate Data} (e.g., drought indices). Economic and environmental stress are recognized as powerful, indirect drivers of displacement that are currently absent from the model.
+        \item Instead of using simple zero-filling or row dropping for missing data, implementing Multiple Imputation by Chained Equations (MICE) or K-Nearest Neighbors (kNN) imputation should be explored. These methods generate more realistic estimates of missing values, potentially stabilizing the model and enriching the feature set.
+        \item Integrate Economic indicators such as GDP per capita or income inequality from the World Bank and climate data. Economic and environmental stress are recognized as powerful, indirect drivers of displacement that are currently absent from the model.
     \end{itemize}
 
     \item \textbf{Alternative Modeling and Temporal Dynamics:}
     \begin{itemize}
-        \item **Evaluation of Gradient Boosting Machines (GBMs):** Experiment with state-of-the-art models like **XGBoost** or **LightGBM**. These boosting methods often outperform Random Forests on structured data and may capture non-linearities the current model misses.
-        \item **Time Series Integration:** The current model is predominantly cross-sectional. Future work must explicitly incorporate the time series nature of the data by using **lagged features** (e.g., using conflict data from $t-1$ or $t-2$ to predict refugee flows at $t$). A full **Recurrent Neural Network (RNN)** or \textbf{ARIMA-type} model could be deployed to leverage the sequential dependency in refugee flows.
+        \item Evaluation of Gradient Boosting Machines (GBMs): Experiment with state-of-the-art models like XGBoost or LightGBM. These boosting methods often outperform Random Forests on structured data and may capture non-linearities the current model misses.
+        \item Time Series Integration: The current model is predominantly cross-sectional. Future work must explicitly incorporate the time series nature of the data by using lagged features. A full Recurrent Neural Network (RNN) or an ARIMA-type model could be deployed to leverage the sequential dependency in refugee flows.
     \end{itemize}
 
     \item \textbf{Classification for Policy Utility:}
-    Shift the modeling goal from a **regression task** (predicting the exact number) to a **classification task** (predicting the severity level: Low, Medium, or High). This policy-focused output is often more valuable for practical resource allocation and the creation of an early-warning risk indicator system than a highly precise numerical prediction.
+    Shift the modeling goal from a regression task (predicting the exact number) to a classification task (predicting the severity level: Low, Medium, or High). This policy-focused output is often more valuable for practical resource allocation and the creation of an early-warning risk indicator system than a highly precise numerical prediction.
 \end{enumerate}
-This project established a verifiable and interpretable link between sociopolitical indicators and forced displacement. The pathway for future research offers a clear trajectory to evolve this foundational work into a highly accurate and actionable tool to assist with humanitarian forecasting.
+Our project established a link between sociopolitical indicators and forced displacement. The pathway for future research offers a clear trajectory to evolve this foundational work into a highly accurate and actionable tool to assist with humanitarian forecasting.
 
 
-\bibliography{final_paper}
-\bibliographystyle{style/icml2025}
+
 
 \begin{thebibliography}{99} 
 
