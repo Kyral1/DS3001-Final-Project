@@ -33,6 +33,10 @@
 \usepackage{mathtools}
 \usepackage{amsthm}
 
+%For tables
+\usepackage{tabularx}
+\usepackage[htt]{hyphenat}
+
 % if you use cleveref..
 \usepackage[capitalize,noabbrev]{cleveref}
 
@@ -53,7 +57,6 @@
 % Todonotes is useful during development; simply uncomment the next line
 %    and comment out the line below the next line to turn off comments
 %\usepackage[disable,textsize=tiny]{todonotes}
-\usepackage[textsize=tiny]{todonotes}
 
 
 % The \icmltitle you define below is probably too long as a header.
@@ -150,103 +153,123 @@ Data cleaning was performed across all three datasets to ensure readiness for an
 
 \subsection{Data Dictionary}
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \caption{Refugee and Related Variables (\texttt{persons\_of\_concern.csv})}
 \label{tab:data_dict_refugee}
 \centering
-\begin{tiny}
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
+\begin{scriptsize}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\columnwidth}{|X|X|X|}
 \hline
 \textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
 Refugees & Number of people recognized as refugees under international mandate. & The primary focus of prediction. \\
 \hline
-Asylum-seekers & People seeking international protection. &  Highly correlated with refugees, a strong predictor and feature (Importance: 0.156). \\
+Asylum-seekers & People seeking international protection. & Strong predictor; highly correlated with refugees (Importance: 0.156). \\
 \hline
-IDPs, Stateless, Others of concern & Population counts of other displacement categories. &  Displacement variables that capture overall instability. \\
+IDPs, Stateless, Others of concern & Populations in other displacement categories. & Captures broader instability. \\
 \hline
 Country of Asylum / Origin & Countries involved in displacement flows. & Useful for geographic controls. \\
 \hline
-ISO Codes & ISO 3166-1 alpha-3 identifiers for merging. & Necessary for joining all datasets. \\
+ISO Codes & ISO-3166 alpha-3 identifiers. & Required for dataset merging. \\
 \hline
-Host community & Host population size. & Minor contextual control variable. \\
+Host community & Host population size. & Minor contextual control. \\
 \hline
-\end{tabular}
-\end{tiny}
+\end{tabularx}
+\end{scriptsize}
 \end{table}
 
-\begin{table}[H]
+
+\begin{table}[!htbp]
 \caption{Conflict Variables (\texttt{UcdpPrioConflict\_v25\_1.csv} and Derived)}
 \label{tab:data_dict_conflict}
 \centering
-\begin{tiny}
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
+\begin{scriptsize}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\columnwidth}{|X|X|X|}
 \hline
 \textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
-\texttt{intensity\_level} & The year's intensity of the conflict (1=Minor, 2=War). &  Captures the severity of active conflict. \\
+\texttt{intensity\_\allowbreak level} 
+& Annual conflict intensity (1 = Minor, 2 = War). 
+& Captures severity of active conflict. \\
 \hline
-\texttt{cumulative\_intensity} & Sum of annual conflict intensity levels. & Captures the total duration and severity of a conflict over time. \\
+\texttt{cumulative\_\allowbreak intensity} 
+& Sum of annual conflict intensities. 
+& Long-run conflict burden. \\
 \hline
-\texttt{asylum\_conflict\_total\break\_conflict\_intensity} & Total conflict intensity in the country of asylum. &  Top feature (Importance: 0.178), reflecting risk in host country. \\
+\texttt{asylum\_\allowbreak conflict\_\allowbreak total\_\allowbreak conflict\_\allowbreak intensity} 
+& Annual conflict intensity in asylum country. 
+& Top feature (Importance: 0.178). \\
 \hline
-\texttt{asylum\_conflict\_total\break\_cumulative\_intensity} & Total cumulative conflict intensity in the country of asylum. &  Important predictor (Importance: 0.128), reflecting long-term host country stability. \\
+\texttt{asylum\_\allowbreak conflict\_\allowbreak total\_\allowbreak cumulative\_\allowbreak intensity} 
+& Total cumulative intensity in asylum country. 
+& Strong predictor (Importance: 0.128). \\
 \hline
-\end{tabular}
-\end{tiny}
+\end{tabularx}
+\end{scriptsize}
 \end{table}
 
-\begin{table}[H]
+
+\begin{table}[!htbp]
 \caption{Freedom Variables (\texttt{All\_data\_FIW\_2013-2021.xlsx})}
 \label{tab:data_dict_freedom}
 \centering
-\begin{tiny}
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
+\begin{scriptsize}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\columnwidth}{|X|X|X|}
 \hline
 \textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
-\texttt{Freedom\_Score\break\_Difference} & The difference in FIW Total scores between the Country of Origin and Asylum. &  Highly important feature (Importance: 0.107), capturing the 'push' vs. 'pull' factor. \\
+\texttt{Freedom\_\allowbreak Score\_\allowbreak Difference} 
+& Difference in FIW Total scores between origin and asylum. 
+& Strong push–pull metric (Importance: 0.107). \\
 \hline
-Total (FIW Score) & Aggregate score for all categories (Political Rights + Civil Liberties). &  Holistic measure of governance and human rights in the country. \\
+Total (FIW Score) 
+& Combined Political Rights + Civil Liberties score. 
+& Holistic governance measure. \\
 \hline
-PR rating / CL rating & Political Rights and Civil Liberties ratings (1–7). &  Coarse-grained summary of governance and rights. \\
+PR rating / CL rating 
+& Political Rights (PR) and Civil Liberties (CL) ratings (1–7). 
+& Coarse summary of governance quality. \\
 \hline
-Status (F/PF/NF) & Freedom classification (Free, Partly Free, Not Free). &  Categorical summary of governance, highly relevant to displacement. \\
+Status (F/PF/NF) 
+& Free, Partly Free, Not Free classification. 
+& Relevant categorical governance indicator. \\
 \hline
-PR, CL, A–G Aggregates & Aggregate sub-scores for all categories (e.g., A. Electoral Process, F. Rule of Law). &  Provide a more granular view of the specific drivers of low freedom scores. \\
+PR, CL, A–G Aggregates 
+& Aggregate sub-scores for major categories. 
+& Granular indicators of governance. \\
 \hline
-A1–G4 Subscores & Individual sub-scores (e.g., A1. Head of government/legislative selection). & Informative but generally collinear with the PR/CL aggregates. \\
+A1–G4 Subscores 
+& Fine-grained subcategory scores. 
+& Informative but collinear with aggregates. \\
 \hline
-\end{tabular}
-\end{tiny}
+\end{tabularx}
+\end{scriptsize}
 \end{table}
 
-\begin{table}[H]
+
+\begin{table}[!htbp]
 \caption{Contextual Variables}
 \label{tab:data_dict_context}
 \centering
-\begin{tiny}
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|p{0.30\columnwidth}|p{0.45\columnwidth}|p{0.20\columnwidth}|}
+\begin{scriptsize}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\columnwidth}{|X|X|X|}
 \hline
 \textbf{Column} & \textbf{Description} & \textbf{Predictive Relevance} \\
 \hline
-Year / Edition & Year of observation and report edition. & Useful for trends/time-series effects. \\
+Year / Edition & Observation year / FIW edition. & Captures temporal effects. \\
 \hline
-Region & Geographic region. & Captures regional patterns in governance and displacement. \\
+Region & Geographic region. & Identifies regional migration patterns. \\
 \hline
-C/T & Country vs. territory indicator. & Minor structural variable. \\
+C/T & Country vs. Territory indicator. & Minor structural variable. \\
 \hline
-\end{tabular}
-\end{tiny}
+\end{tabularx}
+\end{scriptsize}
 \end{table}
+
 
 
 \subsection{Target Variable and Feature Variables}
@@ -320,7 +343,7 @@ To create the final analytic dataset of approximately 99,946 unique country–pa
 \subsection{Model Justification: Random Forest Regressor}
 We selected a Random Forest regression (RFR) as our predictive model. A sample model can be seen in the figure below. 
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Random_Forest_Regression.png}
     \centering
     \caption{Sample Random Forest Regression Model}
@@ -360,9 +383,10 @@ The primary statistical metrics calculated on the log-transformed target variabl
 \subsubsection*{Domain-Specific Metrics (Original Scale)}
 To ensure the model's predictions are interpretable in the context of real-world refugee counts, the predictions $\hat{Y}$ will be inverse-transformed back to the original scale using the formula:
 \begin{center}
-\begin{scriptsize}
-$$\text{Predicted Refugees} = \exp(\hat{Y}) - 1$$
-\end{scriptsize}
+\large
+\[
+\text{Predicted Refugees} = \exp(\hat{Y}) - 1
+\]
 \end{center}
 The model's final performance, relevant for practical application, will be assessed using:
 \begin{itemize}
@@ -375,14 +399,14 @@ To assess how well the Random Forest model predicts refugee movements, we examin
 
 The below plot highlights the uneven distribution of refugee counts in the dataset, with a large concentration of points at zero. The model tends to slightly over-predict refugee movement in cases where the actual count is zero, which is typical in zero-inflated datasets where most country-pairs experience no movement in any given year. For higher values, the model shows substantial spread around the 45-degree reference line, indicating inconsistent accuracy. Notably, the model appears to under-predict large refugee flows, with many points falling below the line when actual values are high. This idea reflects the tendency of Random Forests to smooth out extreme values and struggle with rare, high-magnitude events. 
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Actual_Predicted_Plot.png}
     \centering
     \caption{Actual vs. Predicted Refugee Counts (Linear Scale)}
     \label{actual predicted linear}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Distribution_Residuals_Plot.png}
     \centering
     \caption{Distribution of Residuals}
@@ -391,14 +415,14 @@ The below plot highlights the uneven distribution of refugee counts in the datas
 
 In the above Figure 3, the distribution of residuals shows that the Random Forest Regressor's errors are centered closely around zero, indicating that the model does not systematically over or under-predict refugee flows on average. The histogram is approximately symmetric, although it exhibits long tails in both directions. These tails reflect that, while most predictions are fairly accurate, the model occasionally makes large errors, mostly for rare or extreme refugee movement events. This behavior is expected in migration and conflict-related datasets, which often contain sudden spikes associated with geopolitical events. Overall, the residual histogram suggests that the model performs reasonably well but struggles to capture more volatile refugee flows.
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Residual_Plot.png}
     \centering
     \caption{Predicted vs. Residuals Plot}
     \label{predicted residuals}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Actual_Residuals_Plot.png}
     \centering
     \caption{Actual vs. Residuals Plot}
@@ -411,7 +435,7 @@ When examined against actual values, the residuals show a similar trend. Small a
 
 Lastly, in the below plot of the log-scaled Actual versus Predicted plot, a clearer view of model performance across the full range of refugee counts can be seen. When scaling the data, the extreme values are compressed, separating the dense cluster of zero and low-value cases. On the log scale, mid-range events exhibit a more coherent linear relationship, indicating that the model captures moderate refugee movements relatively well. However, the highest values still show a significant downward deviation from the 45-degree line, reinforcing that the model underestimates the largest displacement events. The column of points at zero on the log scale emphasizes the heavily zero-inflated nature of the dataset, and the model's tendency to slightly over-predict in these cases. Overall, the log-scale plot highlights both the strengths and limitations of our model.
 
-\begin{figure}[H]
+\begin{figure}[!t]
     \includegraphics[width=3.2in]{reports/figures/Log_Scale_Plot.png}
     \centering
     \caption{Actual vs. Predicted (Log Scale)}
@@ -525,7 +549,7 @@ World Bank.
 % sponsors that provided financial support.
 
 \section*{Impact Statement}
-\label{Imapact Statement}
+\label{Impact Statement}
 
 \nocite{*}
 
