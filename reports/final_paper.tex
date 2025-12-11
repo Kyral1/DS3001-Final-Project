@@ -429,8 +429,8 @@ The primary objective of this data science project was to create a model for pre
 The trained Random Forest Regressor model yielded an $R^2$ score of $0.639550$ and a Mean Absolute Error (MAE) of $2,449.43$ refugees on the held-out test set. While not reaching perfect predictive capability, this performance level on a complex socio-political phenomenon is highly indicative of meaningful feature importance and model validity.
 
 The feature importance analysis, a major strength of the Random Forest methodology [Image of Random Forest Regressor diagram], provided clear, actionable insights:
-\begin{itemize}[label=\textendash]
-    \item The total conflict intensity in the country of \textbf{asylum} (\texttt{asylum\_conflict\_total\_conflict\_intensity}, importance: $0.178$) was the most influential feature. This suggests that the immediate, perceived security of the destination region often outweighs the specific degree of conflict in the origin country for a new arrival, or it effectively captures regional displacement dynamics.
+\begin{itemize}
+    \item The total conflict intensity in the country of asylum (\texttt{asylum\_conflict\_total\_conflict\_intensity}, importance: $0.178$) was the most influential feature. This suggests that the immediate, perceived security of the destination region often outweighs the specific degree of conflict in the origin country for a new arrival, or it effectively captures regional displacement dynamics.
     \item The number of existing \texttt{Asylum-seekers} (importance: $0.156$) was highly predictive, acting as a crucial proxy for established migration infrastructure and ongoing crises.
     \item The relative freedom metric, \texttt{Freedom\_Score\_Difference} (importance: $0.107$), confirmed the expectation that displacement is influenced by the perceived democratic deficit between the country of origin and the asylum country.
 \end{itemize}
@@ -448,7 +448,7 @@ The main point of critique for this project is often the performance metrics, pa
 \begin{enumerate}
     \item \textbf{Complexity of Social Phenomena:} Unlike models built on deterministic physical processes, predicting human migration is inherently subject to high variance due to unquantifiable factors, such as abrupt policy changes, social media-driven political movements, or unpredictable local events. Achieving an $R^2$ that accounts for over $63\%$ of the variance in this chaotic, real-world environment demonstrates significant validity and utility.
     \item \textbf{Data Quality and Sparsity:} The project faced substantial challenges in data preparation . The merging of three independent datasets introduced significant data sparsity and missing values, especially when aligning country-year pairs. Given that the final model was trained on data that required numerous rows with missing values to be dropped or simplified, the model's performance is, in part, a reflection of the available public data quality, rather than a failing of the modeling technique itself. The complexity of integrating political, conflict, and humanitarian records from different organizations inherently limits the achievable upper bound of accuracy.
-    \item \textbf{Interpretability as Priority:} The choice of the Random Forest Regressor was a conscious design decision. While more complex, black-box models like deep learning networks might potentially achieve a slightly higher $R^2$, the Random Forest provides clear, localized feature importance scores. For a policy-driven model, understanding why a prediction is being made (e.g., "high conflict intensity in the receiving region is the primary driver") is critically more important than achieving a marginal gain in pure numerical accuracy.
+    \item \textbf{Interpretability as Priority:} The choice of the Random Forest Regressor was a conscious design decision. While more complex, black-box models like deep learning networks might potentially achieve a slightly higher $R^2$, the Random Forest provides clear, localized feature importance scores. For a policy-driven model, understanding why a prediction is being made is critically more important than achieving a gain in numerical accuracy.
 \end{enumerate}
 
 In defense, our project's success lies not just in its predictive score, but in its ability to provide an interpretable, explainable baseline that policymakers can trust and act upon.
@@ -461,17 +461,17 @@ To further enhance the predictive power and utility of this model, the following
     \item \textbf{Advanced Imputation and Data Enrichment:}
     \begin{itemize}
         \item Instead of using simple zero-filling or row dropping for missing data, implementing Multiple Imputation by Chained Equations (MICE) or K-Nearest Neighbors (kNN) imputation should be explored. These methods generate more realistic estimates of missing values, potentially stabilizing the model and enriching the feature set.
-        \item Integrate Economic indicators such as GDP per capita or income inequality from the World Bank and climate data. Economic and environmental stress are recognized as powerful, indirect drivers of displacement that are currently absent from the model.
+        \item Integrate Economic indicators such as GDP per capita or income inequality from the World Bank and climate data. Economic and environmental stress are recognized as powerful, indirect drivers of displacement that are currently absent.
     \end{itemize}
 
     \item \textbf{Alternative Modeling and Temporal Dynamics:}
     \begin{itemize}
-        \item Evaluation of Gradient Boosting Machines (GBMs): Experiment with state-of-the-art models like XGBoost or LightGBM. These boosting methods often outperform Random Forests on structured data and may capture non-linearities the current model misses.
-        \item Time Series Integration: The current model is predominantly cross-sectional. Future work must explicitly incorporate the time series nature of the data by using lagged features. A full Recurrent Neural Network (RNN) or an ARIMA-type model could be deployed to leverage the sequential dependency in refugee flows.
+        \item Evaluation of Gradient Boosting Machines (GBMs): Experiment with models like XGBoost or LightGBM. These boosting methods often outperform Random Forests on structured data and may capture non-linearities the current model misses.
+        \item Time Series Integration: The current model is predominantly cross-sectional. Future work could explicitly incorporate the time series nature of the data by using lagged features. A full Recurrent Neural Network (RNN) or an ARIMA-type model could be used to leverage the sequential dependency in refugee flows.
     \end{itemize}
 
     \item \textbf{Classification for Policy Utility:}
-    Shift the modeling goal from a regression task (predicting the exact number) to a classification task (predicting the severity level: Low, Medium, or High). This policy-focused output is often more valuable for practical resource allocation and the creation of an early-warning risk indicator system than a highly precise numerical prediction.
+    Shift the modeling goal from a regression task (predicting the exact number) to a classification task (predicting the severity level). This policy-focused output is often more valuable for the creation of an early-warning risk indicator system than a highly precise numerical prediction.
 \end{enumerate}
 Our project successfully established a connection between sociopolitical indicators and forced displacement. Our work provides a pathway for future research to create a highly accurate and actionable tool to assist with humanitarian forecasting.
 
